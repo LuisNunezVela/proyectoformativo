@@ -42,4 +42,39 @@ class UserController extends Controller
         $user = User::create($validated);
         return response()->json($user, 201);
     }
+
+    // PUT update user
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|required|string',
+            'lastname' => 'sometimes|required|string',
+            'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|string|min:6',
+            'birthday' => 'nullable|date',
+            'phone' => 'nullable|string',
+            'sex' => 'nullable|in:male,female,other',
+            'description' => 'nullable|string',
+            'photo' => 'nullable|string',
+            'address' => 'nullable|string',
+        ]);
+
+        if (isset($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        }
+
+        $user->update($validated);
+        return response()->json($user, 200);
+    }
+
+    // DELETE remove user
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return response()->json(['message' => 'User deleted successfully'], 200);
+    }
 }
