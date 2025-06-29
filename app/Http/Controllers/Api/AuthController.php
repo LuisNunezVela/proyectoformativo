@@ -40,6 +40,7 @@ class AuthController extends Controller
         'lastname' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|string|min:6',
+        'birthday' => 'required|date',
     ]);
 
     // Crear el usuario
@@ -48,6 +49,7 @@ class AuthController extends Controller
         'lastname' => $request->lastname,
         'email' => $request->email,
         'password' => Hash::make($request->password),
+        'birthdate' => $request->birthdate,
     ]);
 
     return response()->json([
