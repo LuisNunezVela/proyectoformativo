@@ -16,29 +16,23 @@ class User extends Authenticatable
      * @var list<string>
      */
     protected $fillable = [
-        'name',
-        'lastname',
-        'email',
-        'password',
-        'birthdate',
-        'phone',
-        'sex',
-        'description',
-        'photo',
-        'address',
-        'api_token', // ✅ NECESARIO para guardar token
-    ];
+    'name',
+    'lastname',
+    'email',
+    'password',
+    'birthdate',
+    'phone',
+    'sex',
+    'description',
+    'photo',
+    'address',
+];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
-    protected $hidden = [
-        'password',
-        'remember_token',
-        'api_token', // ✅ Opcional: oculta el token en respuestas si no quieres que sea público
-    ];
+protected $hidden = [
+    'password',
+    'remember_token',
+];
+
 
     /**
      * Get the attributes that should be cast.
@@ -46,7 +40,8 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
-        'password' => 'hashed',
-    ];
+    'email_verified_at' => 'datetime',
+    'password' => 'hashed',
+    'photo' => 'string', // opcional
+];
 }

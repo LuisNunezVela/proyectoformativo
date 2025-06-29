@@ -1,8 +1,6 @@
 <?php
-
 namespace App\Http\Controllers\Api;
 
-use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -20,17 +18,12 @@ class AuthController extends Controller
         $user = User::where('email', $request->email)->first();
 
         if (!$user || !Hash::check($request->password, $user->password)) {
-            // Mensaje genérico para no revelar si email existe
             return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
-
-        $user->api_token = Str::random(60);
-        $user->save();
 
         return response()->json([
             'message' => 'Login exitoso',
             'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
-            'token' => $user->api_token,
         ], 200);
     }
 
@@ -50,13 +43,11 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'birthdate' => $request->birthdate,
-            'api_token' => Str::random(60),
         ]);
 
         return response()->json([
             'message' => 'Usuario registrado con éxito',
             'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
-            'token' => $user->api_token,
         ], 201);
     }
 }

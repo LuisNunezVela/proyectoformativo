@@ -1,48 +1,39 @@
 <?php
 
 namespace App\Http\Controllers\Api;
-use Illuminate\Support\Facades\Log;
+
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use Illuminate\Support\Facades\Storage;
+use App\Models\User;  // Asegúrate de importar el modelo User
+use Illuminate\Support\Facades\Log;
 
 class ProfileController extends Controller
 {
     public function uploadPhoto(Request $request)
-{
-    try {
-        // Validar archivo
+    {
         $request->validate([
-            'photo' => 'required|image|max:2048', // 2MB
+            'user_id' => 'required|integer|exists:users,id',
+            'photo_base64' => 'required|string',
         ]);
 
-        // Obtener el usuario autenticado
-        $user = $request->user();
+        try {
+            $user = User::find($request->user_id);
+            if (!$user) {
+                return response()->json(['message' => 'Usuario no encontrado'], 404);
+            }
 
-        if (!$user) {
-            Log::error('Usuario no autenticado al subir imagen.');
-            return response()->json(['message' => 'Usuario no autenticado'], 401);
+            // Guardar directamente el base64 en el campo photo
+            $user->photo = $request->photo_base64;
+            $user->save();
+
+            return response()->json([
+                'message' => 'Foto de perfil actualizada correctamente',
+            ], 200);
+        } catch (\Throwable $e) {
+            Log::error('Error al subir la foto de perfil: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error del servidor: ' . $e->getMessage(),
+            ], 500);
         }
-
-        // Guardar la imagen
-        $path = $request->file('photo')->store("users/{$user->id}", 'private');
-
-        // Actualizar el campo `photo`
-        $user->photo = $path;
-        $user->save();
-
-        return response()->json([
-            'message' => 'Foto de perfil actualizada correctamente',
-            'photo_url' => Storage::disk('private')->temporaryUrl($path, now()->addMinutes(30)),
-        ]);
-    } catch (\Throwable $e) {
-        Log::error('Error al subir la foto de perfil: ' . $e->getMessage(), [
-            'trace' => $e->getTraceAsString(),
-        ]);
-
-        return response()->json([
-            'message' => 'Error del servidor: ' . $e->getMessage(),
-        ], 500);
     }
-}
 }
