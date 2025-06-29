@@ -16,7 +16,7 @@ class ProfileController extends Controller
         ]);
 
         // Obtener el usuario autenticado (agregado por middleware)
-        $user = $request->get('user');
+        $user = $request->user();  // <- Cambiado aquí
 
         if (!$user) {
             return response()->json(['message' => 'Usuario no autenticado'], 401);

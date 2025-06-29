@@ -12,35 +12,30 @@ class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        // Validar entrada
         $request->validate([
             'email' => 'required|email',
             'password' => 'required|string',
         ]);
 
-        // Buscar usuario por email
         $user = User::where('email', $request->email)->first();
 
-        // Verificar usuario y contraseña
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Credenciales inválidas'], 401);
+            // Mensaje genérico para no revelar si email existe
+            return response()->json(['message' => 'Credenciales incorrectas'], 401);
         }
 
-        // Generar nuevo token y guardar
         $user->api_token = Str::random(60);
         $user->save();
 
-        // Responder con usuario y token (solo campos seguros)
         return response()->json([
             'message' => 'Login exitoso',
             'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
             'token' => $user->api_token,
-        ]);
+        ], 200);
     }
 
     public function register(Request $request)
     {
-        // Validar datos de registro
         $request->validate([
             'name' => 'required|string|max:255',
             'lastname' => 'required|string|max:255',
@@ -49,7 +44,6 @@ class AuthController extends Controller
             'birthdate' => 'required|date',
         ]);
 
-        // Crear usuario con token
         $user = User::create([
             'name' => $request->name,
             'lastname' => $request->lastname,
@@ -59,7 +53,6 @@ class AuthController extends Controller
             'api_token' => Str::random(60),
         ]);
 
-        // Responder con usuario y token (solo campos seguros)
         return response()->json([
             'message' => 'Usuario registrado con éxito',
             'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
