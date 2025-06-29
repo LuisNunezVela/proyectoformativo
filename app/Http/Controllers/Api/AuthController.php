@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -17,45 +18,52 @@ class AuthController extends Controller
             'password' => 'required|string',
         ]);
 
-        // Buscar el usuario por email
+        // Buscar usuario por email
         $user = User::where('email', $request->email)->first();
 
-        // Verificar si existe y si la contraseña coincide
+        // Verificar usuario y contraseña
         if (!$user || !Hash::check($request->password, $user->password)) {
             return response()->json(['message' => 'Credenciales inválidas'], 401);
         }
 
-        // Login exitoso, se puede agregar token aquí si usas Sanctum o JWT
+        // Generar nuevo token y guardar
+        $user->api_token = Str::random(60);
+        $user->save();
+
+        // Responder con usuario y token (solo campos seguros)
         return response()->json([
             'message' => 'Login exitoso',
-            'user' => $user,
-        ], 200);
+            'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
+            'token' => $user->api_token,
+        ]);
     }
 
     public function register(Request $request)
-{
-    // Validar los datos del formulario
-    $request->validate([
-        'name' => 'required|string|max:255',
-        'lastname' => 'required|string|max:255',
-        'email' => 'required|email|unique:users,email',
-        'password' => 'required|string|min:6',
-        'birthdate' => 'required|date',
-    ]);
+    {
+        // Validar datos de registro
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'lastname' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'password' => 'required|string|min:6',
+            'birthdate' => 'required|date',
+        ]);
 
-    // Crear el usuario
-    $user = User::create([
-        'name' => $request->name,
-        'lastname' => $request->lastname,
-        'email' => $request->email,
-        'password' => Hash::make($request->password),
-        'birthdate' => $request->birthdate,
-    ]);
+        // Crear usuario con token
+        $user = User::create([
+            'name' => $request->name,
+            'lastname' => $request->lastname,
+            'email' => $request->email,
+            'password' => Hash::make($request->password),
+            'birthdate' => $request->birthdate,
+            'api_token' => Str::random(60),
+        ]);
 
-    return response()->json([
-        'message' => 'Usuario registrado con éxito',
-        'user' => $user,
-    ], 201);
-}
-
+        // Responder con usuario y token (solo campos seguros)
+        return response()->json([
+            'message' => 'Usuario registrado con éxito',
+            'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
+            'token' => $user->api_token,
+        ], 201);
+    }
 }

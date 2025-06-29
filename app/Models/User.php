@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -28,6 +26,7 @@ class User extends Authenticatable
         'description',
         'photo',
         'address',
+        'api_token', // ✅ NECESARIO para guardar token
     ];
 
     /**
@@ -38,6 +37,7 @@ class User extends Authenticatable
     protected $hidden = [
         'password',
         'remember_token',
+        'api_token', // ✅ Opcional: oculta el token en respuestas si no quieres que sea público
     ];
 
     /**
@@ -46,7 +46,7 @@ class User extends Authenticatable
      * @return array<string, string>
      */
     protected $casts = [
-    'email_verified_at' => 'datetime',
-    'password' => 'hashed',
-];
+        'email_verified_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 }
