@@ -25,7 +25,7 @@ class ProfileController extends Controller
         }
 
         // Guardar la imagen
-        $path = $request->file('photo')->store("users/{$user->id}", 'public');
+        $path = $request->file('photo')->store("users/{$user->id}", 'private');
 
         // Actualizar el campo `photo`
         $user->photo = $path;
@@ -33,7 +33,7 @@ class ProfileController extends Controller
 
         return response()->json([
             'message' => 'Foto de perfil actualizada correctamente',
-            'photo_url' => Storage::disk('public')->url($path),
+            'photo_url' => Storage::disk('private')->temporaryUrl($path, now()->addMinutes(30)),
         ]);
     } catch (\Throwable $e) {
         Log::error('Error al subir la foto de perfil: ' . $e->getMessage(), [
