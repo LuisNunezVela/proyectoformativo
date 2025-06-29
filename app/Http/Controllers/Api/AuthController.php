@@ -40,7 +40,7 @@ class AuthController extends Controller
         'lastname' => 'required|string|max:255',
         'email' => 'required|email|unique:users,email',
         'password' => 'required|string|min:6',
-        'birthday' => 'required|date',
+        'birthdate' => 'required|date',
     ]);
 
     // Crear el usuario

@@ -29,7 +29,7 @@ class UserController extends Controller
             'lastname' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
-            'birthday' => 'nullable|date',
+            'birthdate' => 'nullable|date',
             'phone' => 'nullable|string',
             'sex' => 'nullable|in:male,female,other',
             'description' => 'nullable|string',
