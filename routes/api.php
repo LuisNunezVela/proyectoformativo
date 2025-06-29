@@ -14,3 +14,5 @@ Route::prefix('users')->group(function () {
 
 // Ruta de login
 Route::post('/login', [AuthController::class, 'login']);
+//Ruta de registrar
+Route::post('/register', [AuthController::class, 'register']);
