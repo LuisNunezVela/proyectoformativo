@@ -51,7 +51,7 @@ class ProfileController extends Controller
             'name' => 'string|nullable',
             'last_name' => 'string|nullable',
             'email' => 'email|nullable',
-            'gender' => 'string|nullable',
+            'sex' => 'string|nullable',
             'phone' => 'string|nullable',
             'description' => 'string|nullable',
         ]);
