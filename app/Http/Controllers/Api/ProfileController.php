@@ -54,6 +54,7 @@ class ProfileController extends Controller
             'sex' => 'string|nullable',
             'phone' => 'string|nullable',
             'description' => 'string|nullable',
+            'birthdate' => 'nullable|date',
         ]);
 
         $user->update($validated);

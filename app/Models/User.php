@@ -43,5 +43,6 @@ protected $hidden = [
     'email_verified_at' => 'datetime',
     'password' => 'hashed',
     'photo' => 'string', // opcional
+    'birthdate' => 'date',
 ];
 }
