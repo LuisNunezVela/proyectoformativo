@@ -49,7 +49,7 @@ class ProfileController extends Controller
 
         $validated = $request->validate([
             'name' => 'string|nullable',
-            'last_name' => 'string|nullable',
+            'lastname' => 'string|nullable',
             'email' => 'email|nullable',
             'sex' => 'string|nullable',
             'phone' => 'string|nullable',
