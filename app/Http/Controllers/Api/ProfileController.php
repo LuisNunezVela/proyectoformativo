@@ -36,4 +36,28 @@ class ProfileController extends Controller
             ], 500);
         }
     }
+
+    // App\Http\Controllers\Api\UserController.php
+
+    public function update(Request $request, $id)
+    {
+        $user = User::find($id);
+
+        if (!$user) {
+            return response()->json(['message' => 'Usuario no encontrado'], 404);
+        }
+
+        $validated = $request->validate([
+            'name' => 'string|nullable',
+            'last_name' => 'string|nullable',
+            'email' => 'email|nullable',
+            'gender' => 'string|nullable',
+            'phone' => 'string|nullable',
+            'description' => 'string|nullable',
+        ]);
+
+        $user->update($validated);
+
+        return response()->json(['message' => 'Usuario actualizado correctamente', 'user' => $user]);
+    }
 }
