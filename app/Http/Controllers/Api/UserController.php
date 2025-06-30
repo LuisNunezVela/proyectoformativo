@@ -53,7 +53,7 @@ class UserController extends Controller
             'lastname' => 'sometimes|required|string',
             'email' => 'sometimes|required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
-            'birthday' => 'nullable|date',
+            'birthdate' => 'nullable|date',
             'phone' => 'nullable|string',
             'sex' => 'nullable|in:male,female,other',
             'description' => 'nullable|string',
