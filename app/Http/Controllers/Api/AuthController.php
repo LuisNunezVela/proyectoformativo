@@ -23,7 +23,15 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Login exitoso',
-            'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
+            'user' => $user->only(['id',
+        'name',
+        'lastname',
+        'email',
+        'birthdate',
+        'photo',
+        'description',
+        'phone',       // <-- Añadir
+        'sex',]),
         ], 200);
     }
 
@@ -47,7 +55,15 @@ class AuthController extends Controller
 
         return response()->json([
             'message' => 'Usuario registrado con éxito',
-            'user' => $user->only(['id', 'name', 'lastname', 'email', 'birthdate', 'photo']),
+            'user' => $user->only(['id',
+        'name',
+        'lastname',
+        'email',
+        'birthdate',
+        'photo',
+        'description',
+        'phone',       // <-- Añadir
+        'sex',]),
         ], 201);
     }
 }
