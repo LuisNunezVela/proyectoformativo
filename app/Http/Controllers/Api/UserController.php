@@ -31,7 +31,7 @@ class UserController extends Controller
             'password' => 'required|string|min:6',
             'birthdate' => 'nullable|date',
             'phone' => 'nullable|string',
-            'sex' => 'nullable|in:male,female,other',
+            'sex' => 'nullable|string',
             'description' => 'nullable|string',
             'photo' => 'nullable|string',
             'address' => 'nullable|string',
